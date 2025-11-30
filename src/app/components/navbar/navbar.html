@@ -1,0 +1,18 @@
+<nav class="bg-[#121212] p-4 flex justify-between items-center border-b border-[#333]">
+    <a routerLink="/" class="text-2xl font-bold text-[#BB86FC] cursor-pointer no-underline">Hotel Oasis</a>
+    
+    <div class="flex gap-4 items-center text-gray-300">
+        <a routerLink="/" class="hover:text-white cursor-pointer no-underline">Inicio</a>
+        <a routerLink="/reservar" class="hover:text-white cursor-pointer no-underline">Reservar</a>
+        
+        <ng-container *ngIf="!user">
+            <a routerLink="/login" class="bg-[#4A148C] px-4 py-2 rounded text-white hover:bg-[#BB86FC] transition cursor-pointer no-underline">Login</a>
+            <a routerLink="/registro" class="hover:text-white cursor-pointer no-underline">Registrarse</a>
+        </ng-container>
+
+        <ng-container *ngIf="user">
+            <span class="text-[#BB86FC]">Hola, {{ user.nombres }}</span>
+            <button (click)="logout()" class="text-red-500 hover:text-red-400 font-bold border border-red-500 px-2 rounded">Salir</button>
+        </ng-container>
+    </div>
+</nav>

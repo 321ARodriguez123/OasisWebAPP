@@ -1,0 +1,18 @@
+<div class="min-h-screen flex items-center justify-center bg-[#0a0a0a] p-4">
+    <div class="bg-[#121212] p-8 rounded border border-[#333] w-full max-w-2xl">
+        <h2 class="text-2xl text-[#BB86FC] font-bold mb-6 text-center">Crear Cuenta</h2>
+        <form (ngSubmit)="register()" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <input [(ngModel)]="user.nombres" name="nom" placeholder="Nombres" required class="p-3 bg-[#1f1f1f] rounded border border-gray-700 text-white">
+            <input [(ngModel)]="user.apellidos" name="ape" placeholder="Apellidos" required class="p-3 bg-[#1f1f1f] rounded border border-gray-700 text-white">
+            <input [(ngModel)]="user.identificacion_ci" name="ci" placeholder="CI" required class="p-3 bg-[#1f1f1f] rounded border border-gray-700 text-white">
+            <input type="date" [(ngModel)]="user.fecha_nacimiento" name="fec" required class="p-3 bg-[#1f1f1f] rounded border border-gray-700 text-white">
+            <input [(ngModel)]="user.telefono" name="tel" placeholder="Teléfono" required class="p-3 bg-[#1f1f1f] rounded border border-gray-700 text-white">
+            <input type="email" [(ngModel)]="user.correo" name="mail" placeholder="Correo" required class="p-3 bg-[#1f1f1f] rounded border border-gray-700 text-white">
+            <input type="password" [(ngModel)]="user.contrasena" name="pass" placeholder="Contraseña" required class="p-3 bg-[#1f1f1f] rounded border border-gray-700 text-white">
+            <input type="password" [(ngModel)]="confirmPass" name="conf" placeholder="Confirmar Contraseña" required class="p-3 bg-[#1f1f1f] rounded border border-gray-700 text-white">
+            
+            <div class="col-span-full text-red-500 text-center" *ngIf="mensaje">{{ mensaje }}</div>
+            <button type="submit" class="col-span-full bg-[#BB86FC] text-[#1A0050] font-bold p-3 rounded">Registrarse</button>
+        </form>
+    </div>
+</div>
