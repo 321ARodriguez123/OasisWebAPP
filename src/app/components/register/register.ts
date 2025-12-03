@@ -1,15 +1,3 @@
-/*import { Component } from '@angular/core';
-
-@Component({
-  selector: 'app-register',
-  imports: [],
-  templateUrl: './register.html',
-  styleUrl: './register.css',
-})
-export class Register {
-
-}*/
-
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -24,43 +12,48 @@ import { User } from '../../models/interfaces';
   templateUrl: './register.html'
 })
 export class Register {
-  user: User = { nombres: '', apellidos: '', identificacion_ci: '', fecha_nacimiento: '', telefono: '', correo: '', contrasena: '' };
-  confirmPass = '';
-  mensaje = '';
-  public errorMessage: string = '';
+  user: User = { 
+    nombres: '', 
+    apellidos: '', 
+    identificacion_ci: '', 
+    fecha_nacimiento: '', 
+    telefono: '', 
+    correo: '', 
+    contrasena: '' 
+  };
+  
+  confirmPass: string = '';
+  termsAccepted: boolean = false; // Nueva variable para el checkbox
+  mensaje: string = '';
+  exito: boolean = false;
+
   constructor(private api: ApiService, private router: Router) {}
 
   register() {
+    // 1. Validar contraseñas
     if (this.user.contrasena !== this.confirmPass) {
-      this.mensaje = 'Las contraseñas no coinciden';
+      this.mensaje = 'Las contraseñas no coinciden.';
+      this.exito = false;
       return;
     }
+
+    // 2. Validar términos
+    if (!this.termsAccepted) {
+      this.mensaje = 'Debes aceptar los términos y condiciones.';
+      this.exito = false;
+      return;
+    }
+
+    // 3. Enviar datos
     this.api.register(this.user).subscribe({
       next: () => {
-        alert('Registro exitoso. Inicia sesión.');
-        this.router.navigate(['/login']);
+        this.mensaje = '¡Cuenta creada con éxito! Redirigiendo...';
+        this.exito = true;
+        setTimeout(() => this.router.navigate(['/login']), 2000);
       },
-      error: (err) => {
-        // 🚨 CAMBIO CLAVE AQUÍ: Lógica para manejar el error 🚨
-
-        let detailedError = 'Error desconocido al registrar.';
-
-        // 1. Intenta capturar el mensaje de error en el formato más común:
-        if (err.error && err.error.message) {
-          detailedError = err.error.message;
-        } 
-        // 2. A veces el mensaje de error es solo el objeto 'error'
-        else if (err.error && typeof err.error === 'string') {
-          detailedError = err.error;
-        }
-        // 3. Para errores de red o servidor (ej. 500, 503)
-        else if (err.status) {
-          detailedError = `Error de conexión o servidor: HTTP ${err.status}`;
-        }
-        
-        // Asigna el mensaje detallado a la variable
-        this.errorMessage = detailedError; 
-        console.error('Error del servidor:', err);
+      error: (err: any) => {
+        this.mensaje = err.error.error || 'Error al registrar el usuario.';
+        this.exito = false;
       }
     });
   }

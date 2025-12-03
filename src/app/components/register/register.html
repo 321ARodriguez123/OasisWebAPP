@@ -1,18 +1,98 @@
-<div class="min-h-screen flex items-center justify-center bg-[#0a0a0a] p-4">
-    <div class="bg-[#121212] p-8 rounded border border-[#333] w-full max-w-2xl">
-        <h2 class="text-2xl text-[#BB86FC] font-bold mb-6 text-center">Crear Cuenta</h2>
-        <form (ngSubmit)="register()" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <input [(ngModel)]="user.nombres" name="nom" placeholder="Nombres" required class="p-3 bg-[#1f1f1f] rounded border border-gray-700 text-white">
-            <input [(ngModel)]="user.apellidos" name="ape" placeholder="Apellidos" required class="p-3 bg-[#1f1f1f] rounded border border-gray-700 text-white">
-            <input [(ngModel)]="user.identificacion_ci" name="ci" placeholder="CI" required class="p-3 bg-[#1f1f1f] rounded border border-gray-700 text-white">
-            <input type="date" [(ngModel)]="user.fecha_nacimiento" name="fec" required class="p-3 bg-[#1f1f1f] rounded border border-gray-700 text-white">
-            <input [(ngModel)]="user.telefono" name="tel" placeholder="Teléfono" required class="p-3 bg-[#1f1f1f] rounded border border-gray-700 text-white">
-            <input type="email" [(ngModel)]="user.correo" name="mail" placeholder="Correo" required class="p-3 bg-[#1f1f1f] rounded border border-gray-700 text-white">
-            <input type="password" [(ngModel)]="user.contrasena" name="pass" placeholder="Contraseña" required class="p-3 bg-[#1f1f1f] rounded border border-gray-700 text-white">
-            <input type="password" [(ngModel)]="confirmPass" name="conf" placeholder="Confirmar Contraseña" required class="p-3 bg-[#1f1f1f] rounded border border-gray-700 text-white">
+<div class="min-h-screen bg-[#0a0a0a] text-white py-12 px-4 flex flex-col items-center">
+    
+    <div class="w-full max-w-4xl bg-[#121212] p-8 rounded-xl shadow-2xl border border-[#333]">
+        
+        <h2 class="text-3xl font-bold text-[#BB86FC] mb-4 border-b border-gray-700 pb-3">Registro de Huéspedes</h2>
+        <p class="text-gray-400 mb-8">Crea tu cuenta para disfrutar de todos los beneficios de ser un huésped del Hotel Oasis.</p>
+
+        <form (ngSubmit)="register()" class="flex flex-col gap-y-6">
             
-            <div class="col-span-full text-red-500 text-center" *ngIf="mensaje">{{ mensaje }}</div>
-            <button type="submit" class="col-span-full bg-[#BB86FC] text-[#1A0050] font-bold p-3 rounded">Registrarse</button>
+            <fieldset class="border border-gray-700 p-6 rounded-lg">
+                <legend class="px-2 text-[#BB86FC] font-semibold text-lg">Datos Personales</legend>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="flex flex-col gap-2">
+                        <label class="text-gray-300 font-medium">Nombre(s):</label>
+                        <input [(ngModel)]="user.nombres" name="nombre" type="text" placeholder="Ingrese su nombre completo" required 
+                               class="bg-[#1f1f1f] border border-gray-600 rounded p-3 text-white focus:outline-none focus:border-[#BB86FC] transition">
+                    </div>
+                    
+                    <div class="flex flex-col gap-2">
+                        <label class="text-gray-300 font-medium">Apellidos:</label>
+                        <input [(ngModel)]="user.apellidos" name="apellido" type="text" placeholder="Ingrese sus apellidos" required 
+                               class="bg-[#1f1f1f] border border-gray-600 rounded p-3 text-white focus:outline-none focus:border-[#BB86FC] transition">
+                    </div>
+
+                    <div class="flex flex-col gap-2">
+                        <label class="text-gray-300 font-medium">Fecha de Nacimiento:</label>
+                        <input [(ngModel)]="user.fecha_nacimiento" name="fecha" type="date" required 
+                               class="bg-[#1f1f1f] border border-gray-600 rounded p-3 text-white focus:outline-none focus:border-[#BB86FC] transition">
+                    </div>
+
+                    <div class="flex flex-col gap-2">
+                        <label class="text-gray-300 font-medium">Número de Identificación:</label>
+                        <input [(ngModel)]="user.identificacion_ci" name="identificacion" type="text" placeholder="DNI / Pasaporte" required 
+                               class="bg-[#1f1f1f] border border-gray-600 rounded p-3 text-white focus:outline-none focus:border-[#BB86FC] transition">
+                    </div>
+                </div>
+            </fieldset>
+
+            <fieldset class="border border-gray-700 p-6 rounded-lg">
+                <legend class="px-2 text-[#BB86FC] font-semibold text-lg">Contacto y Acceso</legend>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="flex flex-col gap-2">
+                        <label class="text-gray-300 font-medium">Teléfono:</label>
+                        <input [(ngModel)]="user.telefono" name="telefono" type="tel" placeholder="+591 71234567" required 
+                               class="bg-[#1f1f1f] border border-gray-600 rounded p-3 text-white focus:outline-none focus:border-[#BB86FC] transition">
+                    </div>
+
+                    <div class="flex flex-col gap-2">
+                        <label class="text-gray-300 font-medium">Correo Electrónico:</label>
+                        <input [(ngModel)]="user.correo" name="email" type="email" placeholder="ejemplo@dominio.com" required 
+                               class="bg-[#1f1f1f] border border-gray-600 rounded p-3 text-white focus:outline-none focus:border-[#BB86FC] transition">
+                    </div>
+
+                    <div class="flex flex-col gap-2">
+                        <label class="text-gray-300 font-medium">Contraseña:</label>
+                        <input [(ngModel)]="user.contrasena" name="password" type="password" placeholder="Mínimo 8 caracteres" required 
+                               class="bg-[#1f1f1f] border border-gray-600 rounded p-3 text-white focus:outline-none focus:border-[#BB86FC] transition">
+                    </div>
+
+                    <div class="flex flex-col gap-2">
+                        <label class="text-gray-300 font-medium">Confirmar Contraseña:</label>
+                        <input [(ngModel)]="confirmPass" name="confirmPassword" type="password" placeholder="Repita su contraseña" required 
+                               class="bg-[#1f1f1f] border border-gray-600 rounded p-3 text-white focus:outline-none focus:border-[#BB86FC] transition">
+                    </div>
+                </div>
+            </fieldset>
+
+            <div class="flex items-center gap-3 mt-2">
+                <input [(ngModel)]="termsAccepted" name="terms" type="checkbox" id="terms" required 
+                       class="w-5 h-5 accent-[#BB86FC] cursor-pointer">
+                <label for="terms" class="text-gray-300 cursor-pointer text-sm">
+                    Acepto los <span class="text-[#BB86FC] hover:underline">Términos</span> y la <span class="text-[#BB86FC] hover:underline">Política de Privacidad</span>.
+                </label>
+            </div>
+
+            <button type="submit" 
+                    class="w-full bg-[#4A148C] text-white font-bold py-4 rounded-lg shadow-lg hover:bg-[#2C0B3E] hover:scale-[1.02] transition transform duration-200 mt-4 text-lg">
+                Crear Cuenta
+            </button>
+
+            <div *ngIf="mensaje" 
+                 [class.text-green-500]="exito" 
+                 [class.text-red-500]="!exito" 
+                 class="text-center font-bold p-3 bg-[#1f1f1f] rounded border border-gray-700">
+                {{ mensaje }}
+            </div>
+
         </form>
+
+        <p class="text-center text-gray-400 mt-8 border-t border-gray-800 pt-6">
+            ¿Ya tienes una cuenta? 
+            <a routerLink="/login" class="text-[#BB86FC] hover:underline cursor-pointer font-bold ml-1">Inicia sesión</a>
+        </p>
+
     </div>
 </div>

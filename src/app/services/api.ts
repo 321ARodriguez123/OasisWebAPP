@@ -55,6 +55,7 @@ export class ApiService {
   }
 
   // Datos
+  /*
   getRooms(): Observable<any> {
     return this.http.get(`${this.apiUrl}/habitaciones`, this.httpOptions);
   }
@@ -64,6 +65,32 @@ export class ApiService {
   }
 
   createReservation(data: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/reservas/crear`, data, this.httpOptions);
+  }*/
+
+  // --- RESERVAS (Rutas Actualizadas) ---
+  
+  // 1. Obtener Tipos de Habitación
+  getRoomTypes(): Observable<any> {
+    // Coincide con: router.get('/habitaciones/tipos', ...)
+    return this.http.get(`${this.apiUrl}/habitaciones/tipos`, this.httpOptions);
+  }
+
+  // 1.5 Obtener Servicios
+  getServices(): Observable<any> {
+    // CORREGIDO: Coincide con router.get('/habitaciones/servicios', ...)
+    return this.http.get(`${this.apiUrl}/habitaciones/servicios`, this.httpOptions);
+  }
+
+  // 2. Verificar Disponibilidad
+  checkAvailability(data: any): Observable<any> {
+    // CORREGIDO: Coincide con router.post('/reservas/buscar', ...)
+    return this.http.post(`${this.apiUrl}/reservas/buscar`, data, this.httpOptions);
+  }
+
+  // 3. Crear Reserva Final
+  createReservation(data: any): Observable<any> {
+    // Coincide con: router.post('/reservas/crear', ...)
     return this.http.post(`${this.apiUrl}/reservas/crear`, data, this.httpOptions);
   }
 }

@@ -25,13 +25,24 @@ import { ApiService } from '../../services/api';
 export class Login {
   creds = { correo: '', contrasena: '' };
   mensaje = '';
-
+  exito = false; // Nueva variable para cambiar el color (verde/rojo)
   constructor(private api: ApiService, private router: Router) {}
 
   login() {
     this.api.login(this.creds).subscribe({
-      next: () => this.router.navigate(['/reservar']),
-      error: () => this.mensaje = 'Credenciales incorrectas'
+      next: () => {
+        // 1. Mostrar mensaje de éxito
+        this.mensaje = 'Inicio de sesión exitoso. Redirigiendo...';
+        this.exito = true; 
+        setTimeout(() => {
+            this.router.navigate(['/reservar']);
+        }, 3500);
+      },
+      error: () => {
+        // Mostrar mensaje de error
+        this.mensaje = 'Credenciales incorrectas';
+        this.exito = false;
+      }
     });
   }
 }

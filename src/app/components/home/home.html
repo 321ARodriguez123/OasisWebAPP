@@ -1,1 +1,88 @@
-<p>home works!</p>
+<div class="bg-[#0a0a0a] min-h-screen text-white font-sans">
+    
+    <div class="relative h-[80vh] flex items-center justify-center bg-cover bg-center bg-fixed" 
+         style="background-image: url('https://placehold.co/1920x1080/1A0050/ffffff?text=Hotel+Oasis+Exterior');">
+        
+        <div class="absolute inset-0 bg-black bg-opacity-60"></div>
+        
+        <div class="relative z-10 text-center px-4 max-w-4xl mx-auto animate-fade-in-up">
+            <h1 class="text-5xl md:text-7xl font-extrabold text-white mb-6 drop-shadow-[0_4px_4px_rgba(0,0,0,0.5)]">
+                Bienvenido a Oasis
+            </h1>
+            <p class="text-xl md:text-2xl text-gray-200 mb-8 font-light">
+                Tu refugio de lujo y confort te espera. Descubre una experiencia inolvidable.
+            </p>
+            <div class="flex flex-wrap justify-center gap-4">
+                <a href="#habitaciones" class="bg-[#BB86FC] text-[#1A0050] font-bold py-3 px-8 rounded-full shadow-lg hover:bg-white transition duration-300 transform hover:scale-105 no-underline">
+                    Ver Habitaciones
+                </a>
+                <a routerLink="/registro" class="bg-[#4A148C] text-white font-bold py-3 px-8 rounded-full shadow-lg hover:bg-[#6A1B9A] transition duration-300 transform hover:scale-105 cursor-pointer no-underline">
+                    Únete Ahora
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div id="habitaciones" class="py-20 px-4 max-w-7xl mx-auto scroll-mt-20">
+        <h2 class="text-4xl font-bold text-center text-[#BB86FC] mb-12 border-b border-gray-800 pb-4 inline-block w-full">
+            Nuestras Habitaciones Destacadas
+        </h2>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div *ngFor="let hab of habitaciones" class="bg-[#1f1f1f] rounded-xl overflow-hidden shadow-xl border border-gray-800 hover:shadow-2xl hover:border-[#BB86FC] transition duration-300 transform hover:-translate-y-2 group">
+                <div class="overflow-hidden">
+                    <img [src]="hab.img" [alt]="hab.titulo" class="w-full h-56 object-cover group-hover:scale-110 transition duration-500">
+                </div>
+                <div class="p-6">
+                    <h3 class="text-2xl font-bold text-white mb-2">{{ hab.titulo }}</h3>
+                    <p class="text-gray-400 mb-4 text-sm leading-relaxed">{{ hab.desc }}</p>
+                    <div class="flex items-center justify-between mt-auto">
+                        <div class="text-[#BB86FC] font-bold text-xl">Desde ${{ hab.precio }}/noche</div>
+                    </div>
+                    <button routerLink="/reservar" class="w-full mt-4 bg-transparent border border-[#BB86FC] text-[#BB86FC] font-bold py-2 rounded hover:bg-[#BB86FC] hover:text-[#1A0050] transition">
+                        Ver Detalles
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="servicios" class="py-20 px-4 bg-[#121212] border-t border-gray-800 scroll-mt-20">
+        <div class="max-w-7xl mx-auto">
+            <h2 class="text-4xl font-bold text-center text-[#BB86FC] mb-12 border-b border-gray-800 pb-4 inline-block w-full">
+                Nuestros Servicios
+            </h2>
+            
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div *ngFor="let s of servicios" class="bg-[#1f1f1f] p-8 rounded-lg text-center hover:bg-[#252525] transition duration-300 border border-transparent hover:border-gray-700">
+                    <div class="text-[#BB86FC] mb-4 flex justify-center">
+                        <svg class="w-12 h-12" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" [attr.d]="s.icon" />
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-2">{{ s.titulo }}</h3>
+                    <p class="text-gray-400 text-sm">{{ s.desc }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="bg-black py-8 text-center text-gray-500 text-sm border-t border-[#333]">
+        <p>&copy; 2024 Hotel Oasis. Todos los derechos reservados.</p>
+    </footer>
+
+</div>
+
+<style>
+    @keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-fade-in-up {
+        animation: fadeInUp 0.8s ease-out forwards;
+    }
+    /* Suavizar scroll */
+    html {
+        scroll-behavior: smooth;
+    }
+</style>
