@@ -9,6 +9,7 @@
 export class Reservation {
 
 }*/
+
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -19,138 +20,143 @@ import { ApiService } from '../../services/api';
   selector: 'app-reservation',
   standalone: true,
   imports: [CommonModule, FormsModule],
-  templateUrl: './reservation.html'
+  templateUrl: './reservation.html',
+  styleUrls: ['./reservation.css']
 })
 export class Reservation implements OnInit {
-  
-  // Datos de Estancia
-  stayData = {
+
+  // Paso 1: Búsqueda (Incluye Huéspedes)
+  searchData = {
     tipo_habitacion_id: '',
     fecha_entrada: '',
-    fecha_final: ''
+    fecha_final: '',
+    numero_huespedes: 1 // NUEVO CAMPO
   };
 
-  // Datos del Titular
-  titularData = {
+  // Paso 2: Datos del Titular
+  holderData = {
     titular_ci: '',
     titular_nombre: '',
     titular_apellido: ''
   };
 
-  // Listas desde BD
-  tiposHabitacion: any[] = [];
-  servicios: any[] = [];
+  // Listas
+  roomTypes: any[] = [];
+  servicesList: any[] = [];
 
   // Estado
-  disponibilidadVerificada = false;
-  habitacionDisponible: any = null;
-  totalEstimado = 0;
-  mensaje = '';
-  exito = false;
+  isAvailable = false;
+  assignedRoom: any = null;
+  totalEstimated = 0;
+  message = '';
+  messageType = '';
 
   constructor(private api: ApiService, private router: Router) {}
 
-  ngOnInit() {
-    console.log("Iniciando componente de reservas...");
+  ngOnInit(): void {
+    this.loadCatalogs();
+  }
 
-    // 1. Cargar Tipos de Habitación
+  loadCatalogs() {
     this.api.getRoomTypes().subscribe({
-      next: (res: any) => {
-        console.log("Tipos recibidos:", res); // Mira la consola para confirmar
-        // ASIGNACIÓN CORRECTA: Tu API devuelve { success: true, tipos: [...] }
-        this.tiposHabitacion = res.tipos || []; 
-      },
-      error: (err) => {
-        console.error("Error al cargar tipos:", err);
-        this.mensaje = 'Error de conexión con el servidor.';
-      }
+      next: (res: any) => { if (res.success) this.roomTypes = res.tipos; },
+      error: (e) => console.error(e)
     });
 
-    // 2. Cargar Servicios
     this.api.getServices().subscribe({
       next: (res: any) => {
-        this.servicios = (res.servicios || []).map((s: any) => ({
-          ...s,
-          selected: false,
-          cantidad: 1
-        }));
-      }
-    });
-
-    // Pre-llenar usuario si existe
-    this.api.user$.subscribe(u => {
-      if (u) {
-        this.titularData.titular_ci = u.ci || u.identificacion_ci;
-        this.titularData.titular_nombre = u.nombre || u.nombres;
-      }
+        if (res.success) {
+          this.servicesList = res.servicios.map((s: any) => ({
+            ...s,
+            selected: false,
+            cantidad: 1
+          }));
+        }
+      },
+      error: (e) => console.error(e)
     });
   }
 
-  verificarDisponibilidad() {
-    this.mensaje = '';
-    this.disponibilidadVerificada = false;
-
-    if (!this.stayData.tipo_habitacion_id || !this.stayData.fecha_entrada || !this.stayData.fecha_final) {
-      this.mensaje = 'Por favor completa los datos de estancia.';
-      this.exito = false;
+  checkAvailability() {
+    this.message = '';
+    
+    // Validación
+    if (!this.searchData.tipo_habitacion_id || !this.searchData.fecha_entrada || !this.searchData.fecha_final) {
+      this.showMessage('Por favor completa todos los campos.', 'error');
       return;
     }
 
-    this.api.checkAvailability(this.stayData).subscribe({
+    if (this.searchData.numero_huespedes < 1) {
+      this.showMessage('Debe haber al menos 1 huésped.', 'error');
+      return;
+    }
+
+    this.api.checkAvailability(this.searchData).subscribe({
       next: (res: any) => {
         if (res.success && res.available) {
-          this.disponibilidadVerificada = true;
-          this.habitacionDisponible = res.resultado;
-          this.recalcularTotalFinal();
-          this.mensaje = '¡Habitación Disponible! Continúa con tus datos.';
-          this.exito = true;
+          this.isAvailable = true;
+          this.assignedRoom = res.resultado;
+          this.recalculateTotal();
+          this.showMessage(`¡Disponible! Habitación asignada: ${this.assignedRoom.numero_habitacion}`, 'success');
         } else {
-          this.mensaje = 'No hay habitaciones disponibles para esas fechas.';
-          this.exito = false;
+          this.isAvailable = false;
+          this.showMessage(res.message || 'No hay habitaciones disponibles.', 'error');
         }
       },
-      error: (err) => {
-        this.mensaje = err.error.message || 'Error al verificar disponibilidad.';
-        this.exito = false;
-      }
+      error: (err) => this.showMessage('Error de conexión.', 'error')
     });
   }
 
-  recalcularTotalFinal() {
-    if (!this.habitacionDisponible) return;
-    
-    let total = parseFloat(this.habitacionDisponible.total_estimado);
-
-    this.servicios.forEach(s => {
-      if (s.selected) {
-        total += (parseFloat(s.precio) * (s.cantidad || 1));
-      }
+  recalculateTotal() {
+    if (!this.assignedRoom) return;
+    let total = parseFloat(this.assignedRoom.total_estimado_hospedaje || this.assignedRoom.total_estimado);
+    this.servicesList.forEach(s => {
+      if (s.selected) total += (parseFloat(s.precio) * (s.cantidad || 1));
     });
-
-    this.totalEstimado = total;
+    this.totalEstimated = total;
   }
 
-  confirmarReserva() {
-    const serviciosFinales = this.servicios
+  confirmReservation() {
+    if (!this.assignedRoom) return;
+
+    if (!this.holderData.titular_ci || !this.holderData.titular_nombre || !this.holderData.titular_apellido) {
+      this.showMessage('Por favor completa los datos del titular.', 'error');
+      return;
+    }
+
+    const selectedServices = this.servicesList
       .filter(s => s.selected)
       .map(s => ({ id: s.servicio_id, cantidad: s.cantidad }));
 
     const payload = {
-      ...this.stayData,
-      numero_habitacion: this.habitacionDisponible.numero_habitacion,
-      ...this.titularData,
-      servicios: serviciosFinales
+      numero_habitacion: this.assignedRoom.numero_habitacion,
+      fecha_entrada: this.searchData.fecha_entrada,
+      fecha_final: this.searchData.fecha_final,
+      numero_huespedes: this.searchData.numero_huespedes, // ENVIAMOS EL DATO AQUÍ
+      
+      titular_ci: this.holderData.titular_ci,
+      titular_nombre: this.holderData.titular_nombre,
+      titular_apellido: this.holderData.titular_apellido,
+
+      servicios: selectedServices
     };
 
     this.api.createReservation(payload).subscribe({
       next: (res: any) => {
-        alert(`Reserva Creada! ID: ${res.datos.reserva_id}\nTotal a Pagar: $${res.datos.total}`);
-        this.router.navigate(['/']);
+        if (res.success) {
+          alert(`✅ ¡Reserva Exitosa!\nID: ${res.datos.reserva_id}\nTotal: $${res.datos.total}`);
+          this.router.navigate(['/']);
+        }
       },
       error: (err) => {
-        this.mensaje = err.error.error || 'Error al crear la reserva';
-        this.exito = false;
+        console.error(err);
+        this.showMessage(err.error.error || 'Error al crear la reserva.', 'error');
       }
     });
+  }
+
+  showMessage(msg: string, type: 'success' | 'error') {
+    this.message = msg;
+    this.messageType = type;
   }
 }

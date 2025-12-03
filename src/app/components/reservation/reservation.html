@@ -1,107 +1,98 @@
-<div class="min-h-screen bg-[#0a0a0a] text-white py-12 px-4 flex justify-center">
-    
-    <div class="w-full max-w-2xl bg-[#121212] p-8 rounded-xl shadow-2xl border border-[#333]">
-        <h2 class="text-3xl text-center font-bold text-[#BB86FC] mb-6 border-b border-[#007bff] pb-4">
-            🏨 Formulario de Reserva
-        </h2>
+<div class="formulario-container">
+  <h2>🏨 Formulario de Reserva</h2>
+  
+  <!-- === SECCIÓN 1: DATOS DE ESTANCIA === -->
+  <fieldset class="grupo-disponibilidad">
+      <legend>📅 Paso 1: Disponibilidad</legend>
 
-        <form (ngSubmit)="confirmarReserva()">
+      <div class="campo">
+          <label>Tipo de Habitación:</label>
+          <select [(ngModel)]="searchData.tipo_habitacion_id">
+              <option value="" disabled selected>-- Selecciona un tipo --</option>
+              <option *ngFor="let tipo of roomTypes" [value]="tipo.tipo_habitacion_id">
+                  {{ tipo.nombre_tipo }} (Base: ${{ tipo.precio_base }})
+              </option>
+          </select>
+      </div>
 
-            <fieldset class="border-2 border-[#007bff] rounded-lg p-5 mb-6 relative">
-                <legend class="text-[#007bff] font-bold px-2 bg-[#121212]">📅 Datos de la Estancia</legend>
+      <!-- NUEVO CAMPO: PERSONAS -->
+      <div class="campo">
+          <label>N° Personas:</label>
+          <input type="number" [(ngModel)]="searchData.numero_huespedes" min="1" placeholder="1">
+      </div>
 
-                <div class="space-y-4">
-                    
-                    <div>
-                        <label class="block text-gray-300 mb-1 font-bold">Tipo de Habitación:</label>
-                        
-                        <select [(ngModel)]="stayData.tipo_habitacion_id" 
-                                (change)="disponibilidadVerificada = false" 
-                                name="tipo" 
-                                required
-                                class="w-full p-3 bg-[#f9f9f9] text-black border rounded focus:outline-none focus:border-[#007bff]">
-                            
-                            <option value="" disabled selected>Selecciona un tipo</option>
-                            
-                            <option *ngFor="let t of tiposHabitacion" [value]="t.tipo_habitacion_id">
-                                {{ t.nombre_tipo }} - ${{ t.precio_base }}
-                            </option>
+      <div class="campo-doble">
+          <div>
+              <label>Llegada:</label>
+              <input type="date" [(ngModel)]="searchData.fecha_entrada">
+          </div>
+          <div>
+              <label>Salida:</label>
+              <input type="date" [(ngModel)]="searchData.fecha_final">
+          </div>
+      </div>
 
-                        </select>
-                        
-                        <p *ngIf="tiposHabitacion.length === 0" class="text-xs text-red-400 mt-1">
-                            Cargando tipos... (Si no aparece nada, revisa la conexión)
-                        </p>
-                    </div>
+      <button type="button" class="btn-verificar" (click)="checkAvailability()">
+          🔍 Verificar Disponibilidad
+      </button>
 
-                    <div class="grid grid-cols-2 gap-4">
-                        <div>
-                            <label class="block text-gray-300 mb-1 font-bold">Fecha de Entrada:</label>
-                            <input type="date" [(ngModel)]="stayData.fecha_entrada" (change)="disponibilidadVerificada = false" name="entrada" required
-                                   class="w-full p-3 bg-[#f9f9f9] text-black border rounded focus:outline-none focus:border-[#007bff]">
-                        </div>
-                        <div>
-                            <label class="block text-gray-300 mb-1 font-bold">Fecha Final:</label>
-                            <input type="date" [(ngModel)]="stayData.fecha_final" (change)="disponibilidadVerificada = false" name="salida" required
-                                   class="w-full p-3 bg-[#f9f9f9] text-black border rounded focus:outline-none focus:border-[#007bff]">
-                        </div>
-                    </div>
+      <div *ngIf="message" [class]="'alert ' + (messageType === 'success' ? 'alert-success' : 'alert-error')">
+          {{ message }}
+      </div>
+  </fieldset>
 
-                    <button type="button" (click)="verificarDisponibilidad()" 
-                            class="w-full bg-[#ffc107] text-[#333] font-bold py-3 rounded hover:bg-[#e0a800] transition mt-2">
-                        Verificar Disponibilidad
-                    </button>
-                    
-                    <p *ngIf="mensaje" [class.text-green-400]="exito" [class.text-red-400]="!exito" class="mt-2 text-center font-bold">
-                        {{ mensaje }}
-                    </p>
-                </div>
-            </fieldset>
+  <hr>
 
-            <div *ngIf="disponibilidadVerificada" class="animate-fade-in">
-                
-                <hr class="border-gray-700 my-6">
+  <!-- === SECCIÓN 2: CONFIRMACIÓN === -->
+  <div *ngIf="isAvailable" class="fade-in">
+      
+      <fieldset class="grupo-titular">
+          <legend>👤 Paso 2: Titular de la Reserva</legend>
+          
+          <div class="formulario-huesped"> 
+              <div class="campo">
+                  <label>Cédula de Identidad (C.I.):</label>
+                  <input type="text" [(ngModel)]="holderData.titular_ci" placeholder="Ej: 849201">
+              </div>
+              <div class="campo">
+                  <label>Nombres:</label>
+                  <input type="text" [(ngModel)]="holderData.titular_nombre">
+              </div>
+              <div class="campo">
+                  <label>Apellidos:</label>
+                  <input type="text" [(ngModel)]="holderData.titular_apellido">
+              </div>
+          </div>
+      </fieldset>
+      
+      <hr>
 
-                <fieldset class="border-2 border-[#28a745] rounded-lg p-5 mb-6">
-                    <legend class="text-[#28a745] font-bold px-2 bg-[#121212]">👤 Titular de la Reserva</legend>
-                    <div class="space-y-4">
-                        <div>
-                            <label class="block text-gray-300 mb-1 font-bold">C.I.:</label>
-                            <input type="text" [(ngModel)]="titularData.titular_ci" name="ci" required class="w-full p-3 bg-[#f9f9f9] text-black border rounded">
-                        </div>
-                        <div>
-                            <label class="block text-gray-300 mb-1 font-bold">Nombres:</label>
-                            <input type="text" [(ngModel)]="titularData.titular_nombre" name="nom" required class="w-full p-3 bg-[#f9f9f9] text-black border rounded">
-                        </div>
-                        <div>
-                            <label class="block text-gray-300 mb-1 font-bold">Apellidos:</label>
-                            <input type="text" [(ngModel)]="titularData.titular_apellido" name="ape" required class="w-full p-3 bg-[#f9f9f9] text-black border rounded">
-                        </div>
-                    </div>
-                </fieldset>
+      <div class="campo servicios-adicionales">
+          <label>Servicios Adicionales:</label>
+          <div *ngFor="let svc of servicesList" class="checkbox-grupo">
+              <input type="checkbox" [id]="'svc'+svc.servicio_id" 
+                     [(ngModel)]="svc.selected" 
+                     (change)="recalculateTotal()">
+              <label [for]="'svc'+svc.servicio_id">
+                  {{ svc.nombre_servicio }} (${{ svc.precio }})
+              </label>
+              <div *ngIf="svc.selected" class="input-cant-wrapper">
+                  <label>Cant:</label>
+                  <input type="number" [(ngModel)]="svc.cantidad" (change)="recalculateTotal()" min="1">
+              </div>
+          </div>
+      </div>
 
-                <div class="bg-[#1f1f1f] border border-dashed border-gray-600 rounded p-4 mb-6">
-                    <label class="block text-white font-bold mb-3 text-lg">Servicios Adicionales:</label>
-                    <div class="space-y-3">
-                        <div *ngFor="let s of servicios" class="flex flex-col sm:flex-row sm:items-center gap-3 p-2 rounded hover:bg-[#2a2a2a]">
-                            <div class="flex items-center gap-2">
-                                <input type="checkbox" [(ngModel)]="s.selected" (change)="recalcularTotalFinal()" [name]="'chk_'+s.servicio_id" class="w-5 h-5 cursor-pointer">
-                                <label class="text-gray-300 cursor-pointer select-none font-normal">
-                                    {{ s.nombre_servicio }} (${{ s.precio }})
-                                </label>
-                            </div>
-                            <div *ngIf="s.selected" class="ml-7 sm:ml-auto flex items-center gap-2">
-                                <label class="text-sm text-gray-400">Días/Cant:</label>
-                                <input type="number" [(ngModel)]="s.cantidad" (change)="recalcularTotalFinal()" [name]="'qty_'+s.servicio_id" min="1" class="w-20 p-1 bg-white text-black border rounded text-center">
-                            </div>
-                        </div>
-                    </div>
-                </div>
+      <hr>
 
-                <div class="text-right text-2xl font-bold mb-4 text-[#00C853]">Total Estimado: ${{ totalEstimado }}</div>
-                <button type="submit" class="w-full bg-[#007bff] text-white font-bold py-3 rounded hover:bg-[#0056b3] transition text-lg">Confirmar Reserva</button>
-            </div>
+      <div class="resumen-pago">
+          <h3>Habitación Asignada: <span class="highlight">{{ assignedRoom?.numero_habitacion }}</span></h3>
+          <p>Huéspedes: <strong>{{ searchData.numero_huespedes }}</strong></p>
+          <h2>Total a Pagar: ${{ totalEstimated | number:'1.2-2' }}</h2>
+      </div>
 
-        </form>
-    </div>
+      <button type="button" class="btn-confirmar" (click)="confirmReservation()">
+          ✅ CONFIRMAR Y PAGAR
+      </button>
+  </div>
 </div>
