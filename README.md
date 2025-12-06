@@ -1,59 +1,11 @@
-# HotelOasisFrontend
+El programa es un proyecto de Gestión Hotelera diseñado para automatizar y optimizar los procesos operativos y administrativos del hotel. En cuanto a los módulos de clientes, el sistema permite a los usuarios registrarse, proporcionando datos personales esenciales como nombre, correo electrónico y CI para quedar registrados. Una vez dentro, el cliente puede consultar la disponibilidad de habitaciones ingresando las fechas de entrada y salida, y el número de huéspedes. Finalmente, el cliente puede realizar una reserva de una habitación disponible, agregando servicios adicionales opcionales y completando el pago para recibir un código de verificación que confirma que la habitación queda reservada en el calendario del hotel.
+Requerimientos Funcionales del Cliente
+Registro de Usuario : El sistema almacenará los datos personales necesarios del cliente, como nombres, CI, correo electrónico y contraseña, para su identificación y contacto, luego de que complete el formulario.
+Consulta de Disponibilidad de Habitaciones: El sistema mostrará un listado de habitaciones disponibles (que no estén ocupadas ni reservadas) en la pantalla, basado en las fechas de entrada/salida y el número de huéspedes ingresados por el usuario.
+Reserva de Habitación : El cliente selecciona una habitación disponible, ingresa fechas y datos adicionales, y puede seleccionar servicios adicionales opcionales para completar la reserva; esto genera un código de verificación y guarda la reserva en el calendario
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.0.0.
 
-## Development server
-
-To start a local development server, run:
-
-```bash
-ng serve
-```
-
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
-
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
-```
-
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
-
-```bash
-ng generate --help
-```
-
-## Building
-
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+Integrantes
+  - Alejandro Paucara
+  - Jhostin Contreras
+  - Diego Rodriguez
