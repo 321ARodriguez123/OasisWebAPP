@@ -1,98 +1,125 @@
-<div class="formulario-container">
-  <h2>🏨 Formulario de Reserva</h2>
-  
-  <!-- === SECCIÓN 1: DATOS DE ESTANCIA === -->
-  <fieldset class="grupo-disponibilidad">
-      <legend>📅 Paso 1: Disponibilidad</legend>
+<div class="min-h-screen bg-[#0a0a0a] text-white py-12 px-4">
+    <div class="max-w-4xl mx-auto">
 
-      <div class="campo">
-          <label>Tipo de Habitación:</label>
-          <select [(ngModel)]="searchData.tipo_habitacion_id">
-              <option value="" disabled selected>-- Selecciona un tipo --</option>
-              <option *ngFor="let tipo of roomTypes" [value]="tipo.tipo_habitacion_id">
-                  {{ tipo.nombre_tipo }} (Base: ${{ tipo.precio_base }})
-              </option>
-          </select>
-      </div>
+        <h2 class="text-4xl font-bold text-[#BB86FC] mb-8 border-b border-gray-800 pb-4">
+            🏨 Formulario de Reserva
+        </h2>
 
-      <!-- NUEVO CAMPO: PERSONAS -->
-      <div class="campo">
-          <label>N° Personas:</label>
-          <input type="number" [(ngModel)]="searchData.numero_huespedes" min="1" placeholder="1">
-      </div>
+        <div class="bg-[#121212] p-8 rounded-xl border border-[#333] shadow-lg mb-8">
+            
+            <h3 class="text-2xl font-bold text-white mb-6 flex items-center gap-2">
+                <span>📅</span> Paso 1: Disponibilidad
+            </h3>
 
-      <div class="campo-doble">
-          <div>
-              <label>Llegada:</label>
-              <input type="date" [(ngModel)]="searchData.fecha_entrada">
-          </div>
-          <div>
-              <label>Salida:</label>
-              <input type="date" [(ngModel)]="searchData.fecha_final">
-          </div>
-      </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                
+                <div class="col-span-1 md:col-span-2">
+                    <label class="block text-gray-400 text-sm mb-2">Tipo de Habitación:</label>
+                    <select [(ngModel)]="searchData.tipo_habitacion_id" 
+                            class="w-full border border-gray-700 rounded-lg p-3 focus:outline-none focus:border-[#BB86FC] transition">
+                        <option value="" disabled selected>-- Selecciona un tipo --</option>
+                        <option *ngFor="let tipo of roomTypes" [value]="tipo.tipo_habitacion_id">
+                            {{ tipo.nombre_tipo }} (Base: ${{ tipo.precio_base }})
+                        </option>
+                    </select>
+                </div>
 
-      <button type="button" class="btn-verificar" (click)="checkAvailability()">
-          🔍 Verificar Disponibilidad
-      </button>
+                <div>
+                    <label class="block text-gray-400 text-sm mb-2">N° Personas:</label>
+                    <input type="number" [(ngModel)]="searchData.numero_huespedes" min="1" placeholder="1"
+                           class="w-full bg-[#1f1f1f] text-white border border-gray-700 rounded-lg p-3 focus:outline-none focus:border-[#BB86FC] transition">
+                </div>
 
-      <div *ngIf="message" [class]="'alert ' + (messageType === 'success' ? 'alert-success' : 'alert-error')">
-          {{ message }}
-      </div>
-  </fieldset>
+                <div>
+                    <label class="block text-gray-400 text-sm mb-2">Llegada:</label>
+                    <input type="date" [(ngModel)]="searchData.fecha_entrada"
+                           class="w-full bg-[#1f1f1f] text-white border border-gray-700 rounded-lg p-3 focus:outline-none focus:border-[#BB86FC] transition">
+                </div>
+                <div>
+                    <label class="block text-gray-400 text-sm mb-2">Salida:</label>
+                    <input type="date" [(ngModel)]="searchData.fecha_final"
+                           class="w-full bg-[#1f1f1f] text-white border border-gray-700 rounded-lg p-3 focus:outline-none focus:border-[#BB86FC] transition">
+                </div>
+            </div>
 
-  <hr>
+            <button type="button" (click)="checkAvailability()" 
+                    class="w-full mt-8 bg-[#1f1f1f] border border-[#BB86FC] text-[#BB86FC] font-bold py-3 px-6 rounded-lg hover:bg-[#BB86FC] hover:text-[#1A0050] transition duration-300 uppercase tracking-wide">
+                🔍 Verificar Disponibilidad
+            </button>
 
-  <!-- === SECCIÓN 2: CONFIRMACIÓN === -->
-  <div *ngIf="isAvailable" class="fade-in">
-      
-      <fieldset class="grupo-titular">
-          <legend>👤 Paso 2: Titular de la Reserva</legend>
-          
-          <div class="formulario-huesped"> 
-              <div class="campo">
-                  <label>Cédula de Identidad (C.I.):</label>
-                  <input type="text" [(ngModel)]="holderData.titular_ci" placeholder="Ej: 849201">
-              </div>
-              <div class="campo">
-                  <label>Nombres:</label>
-                  <input type="text" [(ngModel)]="holderData.titular_nombre">
-              </div>
-              <div class="campo">
-                  <label>Apellidos:</label>
-                  <input type="text" [(ngModel)]="holderData.titular_apellido">
-              </div>
-          </div>
-      </fieldset>
-      
-      <hr>
+            <div *ngIf="message" class="mt-6 p-4 rounded-lg font-bold text-center border"
+                 [ngClass]="{
+                    'bg-green-900 border-green-500 text-green-300': messageType === 'success',
+                    'bg-red-900 border-red-500 text-red-300': messageType !== 'success'
+                 }">
+                {{ message }}
+            </div>
+        </div>
 
-      <div class="campo servicios-adicionales">
-          <label>Servicios Adicionales:</label>
-          <div *ngFor="let svc of servicesList" class="checkbox-grupo">
-              <input type="checkbox" [id]="'svc'+svc.servicio_id" 
-                     [(ngModel)]="svc.selected" 
-                     (change)="recalculateTotal()">
-              <label [for]="'svc'+svc.servicio_id">
-                  {{ svc.nombre_servicio }} (${{ svc.precio }})
-              </label>
-              <div *ngIf="svc.selected" class="input-cant-wrapper">
-                  <label>Cant:</label>
-                  <input type="number" [(ngModel)]="svc.cantidad" (change)="recalculateTotal()" min="1">
-              </div>
-          </div>
-      </div>
+        <hr class="border-gray-800 my-8">
 
-      <hr>
+        <div *ngIf="isAvailable" class="bg-[#121212] p-8 rounded-xl border border-[#333] shadow-lg">
+            
+            <h3 class="text-2xl font-bold text-white mb-6 flex items-center gap-2 border-b border-gray-800 pb-4">
+                <span>👤</span> Paso 2: Titular de la Reserva
+            </h3>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                <div>
+                    <label class="block text-gray-400 text-sm mb-2">Cédula (C.I.):</label>
+                    <input type="text" [(ngModel)]="holderData.titular_ci" placeholder="Ej: 849201"
+                           class="w-full bg-[#1f1f1f] text-white border border-gray-700 rounded-lg p-3 focus:outline-none focus:border-[#BB86FC]">
+                </div>
+                <div>
+                    <label class="block text-gray-400 text-sm mb-2">Nombres:</label>
+                    <input type="text" [(ngModel)]="holderData.titular_nombre"
+                           class="w-full bg-[#1f1f1f] text-white border border-gray-700 rounded-lg p-3 focus:outline-none focus:border-[#BB86FC]">
+                </div>
+                <div>
+                    <label class="block text-gray-400 text-sm mb-2">Apellidos:</label>
+                    <input type="text" [(ngModel)]="holderData.titular_apellido"
+                           class="w-full bg-[#1f1f1f] text-white border border-gray-700 rounded-lg p-3 focus:outline-none focus:border-[#BB86FC]">
+                </div>
+            </div>
+            
+            <hr class="border-gray-800 my-6">
 
-      <div class="resumen-pago">
-          <h3>Habitación Asignada: <span class="highlight">{{ assignedRoom?.numero_habitacion }}</span></h3>
-          <p>Huéspedes: <strong>{{ searchData.numero_huespedes }}</strong></p>
-          <h2>Total a Pagar: ${{ totalEstimated | number:'1.2-2' }}</h2>
-      </div>
+            <div class="mb-8">
+                <label class="block text-[#BB86FC] font-bold text-lg mb-4">Servicios Adicionales:</label>
+                <div class="bg-[#1f1f1f] p-4 rounded-lg border border-gray-700 space-y-3">
+                    <div *ngFor="let svc of servicesList" class="flex items-center justify-between border-b border-gray-800 last:border-0 pb-3 last:pb-0">
+                        
+                        <div class="flex items-center gap-3">
+                            <input type="checkbox" [id]="'svc'+svc.servicio_id" 
+                                   [(ngModel)]="svc.selected" 
+                                   (change)="recalculateTotal()"
+                                   class="w-5 h-5 accent-[#BB86FC] bg-gray-700 border-gray-600 rounded cursor-pointer">
+                            <label [for]="'svc'+svc.servicio_id" class="text-gray-300 cursor-pointer select-none hover:text-white transition">
+                                {{ svc.nombre_servicio }} <span class="text-[#BB86FC]">(${{ svc.precio }})</span>
+                            </label>
+                        </div>
 
-      <button type="button" class="btn-confirmar" (click)="confirmReservation()">
-          ✅ CONFIRMAR Y PAGAR
-      </button>
-  </div>
+                        <div *ngIf="svc.selected" class="flex items-center gap-2">
+                            <label class="text-xs text-gray-500 uppercase">Cant:</label>
+                            <input type="number" [(ngModel)]="svc.cantidad" (change)="recalculateTotal()" min="1"
+                                   class="w-16 bg-[#0a0a0a] text-white border border-gray-600 rounded p-1 text-center focus:border-[#BB86FC] outline-none">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <hr class="border-gray-800 my-6">
+
+            <div class="bg-[#0a0a0a] p-6 rounded-lg border border-dashed border-gray-700 text-center mb-8">
+                <h3 class="text-gray-400 text-lg mb-2">Habitación Asignada: <span class="text-white font-bold">{{ assignedRoom?.numero_habitacion }}</span></h3>
+                <p class="text-gray-500 mb-2">Huéspedes: <strong>{{ searchData.numero_huespedes }}</strong></p>
+                <h2 class="text-4xl font-bold text-[#00C853] mt-4">Total: ${{ totalEstimated | number:'1.2-2' }}</h2>
+            </div>
+
+            <button type="button" (click)="confirmReservation()"
+                    class="w-full bg-[#BB86FC] text-[#1A0050] font-bold py-4 px-6 rounded-lg hover:bg-white hover:scale-[1.01] transition duration-300 shadow-lg shadow-purple-900/50">
+                ✅ CONFIRMAR Y PAGAR
+            </button>
+        </div>
+    </div>
 </div>
