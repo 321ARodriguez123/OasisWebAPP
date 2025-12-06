@@ -1,0 +1,2 @@
+injectar el servicio en el controlador
+le decimos de que tipo va a ser

@@ -81,6 +81,12 @@ export class ApiService {
     // CORREGIDO: Coincide con router.get('/habitaciones/servicios', ...)
     return this.http.get(`${this.apiUrl}/habitaciones/servicios`, this.httpOptions);
   }
+getUserProfile() {
+  // Tienes que agregar { withCredentials: true } explícitamente
+  return this.http.get(`${this.apiUrl}/usuario/perfil`, { withCredentials: true });
+}
+
+
 
   // 2. Verificar Disponibilidad
   checkAvailability(data: any): Observable<any> {

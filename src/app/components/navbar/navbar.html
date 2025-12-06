@@ -11,8 +11,13 @@
         </ng-container>
 
         <ng-container *ngIf="user">
-            <span class="text-[#BB86FC]">Hola, {{ user.nombres }}</span>
-            <button (click)="logout()" class="text-red-500 hover:text-red-400 font-bold border border-red-500 px-2 rounded">Salir</button>
+            <a routerLink="/perfil" class="text-[#BB86FC] hover:text-white cursor-pointer no-underline font-bold flex items-center gap-2" title="Ir a Mi Cuenta">
+                <span>Hola, {{ user.nombres }}</span>
+            </a>
+            
+            <button (click)="logout()" class="text-red-500 hover:text-red-400 font-bold border border-red-500 px-2 rounded ml-2">
+                Salir
+            </button>
         </ng-container>
     </div>
 </nav>
