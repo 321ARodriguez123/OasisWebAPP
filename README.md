@@ -1,5 +1,14 @@
 ![Uploading image.png…]()
+Descripción Breve
 
+"OASIS" es un Sistema de Gestión Hotelera integral diseñado para automatizar y optimizar todos los procesos operativos y administrativos de un hotel.
+
+
+OASIS" es un Sistema de Gestión Hotelera diseñado para ofrecer una experiencia fluida y optimizada a los clientes. Su objetivo principal, desde la perspectiva del usuario, es automatizar y optimizar la gestión de reservas y servicios adicionales
+
+
+
+Inventario y Servicios: Permite al personal administrativo gestionar el inventario de habitaciones y administrar los servicios adicionales ofrecidos al cliente.
 Componentes Desarrollados por el Equipo - Proyecto OASIS
 Este proyecto de Gestión Hotelera "OASIS" busca automatizar y optimizar los procesos operativos y administrativos de un hotel. A continuación, se detallan las contribuciones específicas de cada integrante en los módulos clave de acceso y gestión de usuarios.
 
