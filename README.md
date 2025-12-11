@@ -14,7 +14,7 @@ Diego Adrian Rodriguez Quispe
 Alejandro Antoni Paucara Quispe 
 
 Módulos y Contribuciones Individuales
- Jhostin Contreras Poma: Módulo de Acceso (Inicio de Sesión y Registro)
+ 1. Jhostin Contreras Poma: Módulo de Acceso (Inicio de Sesión y Registro)
 
 Descripción del Componente: Responsable de la implementación principal del flujo de Registro e Inicio de Sesión del Usuario.
 
@@ -26,7 +26,7 @@ Creación de las redirecciones necesarias hacia las páginas de registro e inici
 
 Base funcional del requerimiento R1 (Registrar información o datos de un usuario).
 
- Diego Adrian Rodriguez Quispe: Mejora y Validación del Registro
+ 2. Diego Adrian Rodriguez Quispe: Mejora y Validación del Registro
 Descripción del Componente: Se enfocó en optimizar y asegurar la integridad de los datos de los nuevos usuarios en el proceso de registro.
 
 Aportes Clave:
@@ -37,7 +37,7 @@ Desarrollo del Manejo de Situaciones Anormales en el registro , como la detecci�
 
 Aseguramiento de los Criterios de Aceptación para que los datos se almacenen correctamente.
 
- Alejandro Antoni Paucara Quispe: Componente "Mi Cuenta"
+ 3. Alejandro Antoni Paucara Quispe: Componente "Mi Cuenta"
 Descripción del Componente: Creación del módulo central para la gestión de la cuenta del cliente una vez que ha iniciado sesión.
 
 Aportes Clave:
