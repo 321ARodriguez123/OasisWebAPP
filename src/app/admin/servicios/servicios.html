@@ -1,0 +1,178 @@
+<div class="p-6 bg-gray-800 rounded-xl shadow-xl text-white">
+
+    <h2 class="text-3xl font-extrabold text-yellow-400 mb-6">
+        Gestión de Servicios Adicionales
+    </h2>
+
+    <div *ngIf="mensaje" class="p-3 mb-4 bg-green-900 rounded-lg text-green-300">
+        {{ mensaje }}
+    </div>
+
+    <div *ngIf="error" class="p-3 mb-4 bg-red-900 rounded-lg text-red-300">
+        {{ error }}
+    </div>
+
+    <!-- CREAR SERVICIO -->
+    <div class="bg-gray-700 p-6 rounded-lg mb-8">
+        <h3 class="text-xl font-semibold mb-4">Crear Nuevo Servicio</h3>
+
+        <form (ngSubmit)="crearServicio()" class="grid grid-cols-1 md:grid-cols-4 gap-4">
+
+            <input
+                [(ngModel)]="nuevoServicio.nombre_servicio"
+                name="nombre"
+                type="text"
+                placeholder="Nombre (Ej: Spa)"
+                required
+                class="p-3 bg-gray-600 rounded border-gray-500"
+            />
+
+            <input
+                [(ngModel)]="nuevoServicio.precio"
+                name="precio"
+                type="number"
+                placeholder="Precio (Ej: 30.00)"
+                required
+                class="p-3 bg-gray-600 rounded border-gray-500"
+            />
+
+            <select
+                [(ngModel)]="nuevoServicio.disponibilidad"
+                name="disponibilidad"
+                class="p-3 bg-gray-600 rounded border-gray-500"
+            >
+                <option *ngFor="let disp of disponibilidades" [ngValue]="disp">
+                    {{ disp }}
+                </option>
+            </select>
+
+            <input
+                [(ngModel)]="nuevoServicio.descripcion"
+                name="descripcion"
+                type="text"
+                placeholder="Descripción"
+                class="p-3 bg-gray-600 rounded border-gray-500"
+            />
+
+            <button
+                type="submit"
+                class="bg-yellow-600 text-white p-3 rounded-lg hover:bg-yellow-700 col-span-full md:col-span-1"
+            >
+                Crear Servicio
+            </button>
+        </form>
+    </div>
+
+    <!-- TABLA -->
+    <h3 class="text-2xl font-semibold mb-4 border-b border-gray-700 pb-2">
+        Servicios Existentes
+    </h3>
+
+    <div class="overflow-x-auto max-w-full">
+        <table class="min-w-full table-fixed divide-y divide-gray-700">
+
+            <!-- CABECERA -->
+            <thead class="bg-gray-700 text-left text-sm">
+                <tr>
+                    <th class="w-16 px-6 py-3">ID</th>
+                    <th class="w-48 px-6 py-3">Nombre</th>
+                    <th class="w-32 px-6 py-3">Precio</th>
+                    <th class="w-40 px-6 py-3">Disponibilidad</th>
+                    <th class="w-64 px-6 py-3">Descripción</th>
+                    <th class="w-32 px-6 py-3">Acciones</th>
+                </tr>
+            </thead>
+
+            <!-- CUERPO -->
+            <tbody class="bg-gray-800 divide-y divide-gray-700 text-sm">
+
+                <tr *ngFor="let servicio of servicios">
+
+                    <!-- MODO EDICIÓN -->
+                    <ng-container
+                        *ngIf="editandoServicio?.servicio_id === servicio.servicio_id; else vistaNormal">
+
+                        <td class="px-6 py-4">
+                            {{ servicio.servicio_id }}
+                        </td>
+
+                        <td class="px-6 py-4">
+                            <input
+                                [(ngModel)]="editandoServicio.nombre_servicio"
+                                type="text"
+                                class="p-2 bg-gray-600 rounded w-full"
+                            />
+                        </td>
+
+                        <td class="px-6 py-4">
+                            <input
+                                [(ngModel)]="editandoServicio.precio"
+                                type="number"
+                                class="p-2 bg-gray-600 rounded w-24"
+                            />
+                        </td>
+
+                        <td class="px-6 py-4">
+                            <select
+                                [(ngModel)]="editandoServicio.disponibilidad"
+                                class="p-2 bg-gray-600 rounded w-full"
+                            >
+                                <option *ngFor="let disp of disponibilidades" [ngValue]="disp">
+                                    {{ disp }}
+                                </option>
+                            </select>
+                        </td>
+
+                        <td class="px-6 py-4">
+                            <input
+                                [(ngModel)]="editandoServicio.descripcion"
+                                type="text"
+                                class="p-2 bg-gray-600 rounded w-full"
+                            />
+                        </td>
+
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <button
+                                (click)="guardarEdicion()"
+                                class="text-green-400 hover:text-green-600 mr-3"
+                            >
+                                Guardar
+                            </button>
+                            <button
+                                (click)="editandoServicio = null"
+                                class="text-gray-400 hover:text-gray-600"
+                            >
+                                Cancelar
+                            </button>
+                        </td>
+                    </ng-container>
+
+                    <!-- MODO NORMAL -->
+                    <ng-template #vistaNormal>
+                        <td class="px-6 py-4">{{ servicio.servicio_id }}</td>
+                        <td class="px-6 py-4 truncate">{{ servicio.nombre_servicio }}</td>
+                        <td class="px-6 py-4">${{ servicio.precio | number:'1.2-2' }}</td>
+                        <td class="px-6 py-4">{{ servicio.disponibilidad }}</td>
+                        <td class="px-6 py-4 truncate">{{ servicio.descripcion }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <button
+                                (click)="iniciarEdicion(servicio)"
+                                class="text-indigo-400 hover:text-indigo-600 mr-3"
+                            >
+                                Editar
+                            </button>
+                            <button
+                                (click)="eliminarServicio(servicio.servicio_id)"
+                                class="text-red-400 hover:text-red-600"
+                            >
+                                Eliminar
+                            </button>
+                        </td>
+                    </ng-template>
+
+                </tr>
+
+            </tbody>
+        </table>
+    </div>
+</div>

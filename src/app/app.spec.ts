@@ -61,5 +61,6 @@ describe('AppComponent', () => {
     const compiled = fixture.nativeElement as HTMLElement;
     // Asegúrate de que el contenido del título sea exacto
     expect(compiled.querySelector('h1')?.textContent).toContain('Hello, hotel-oasis-frontend');
-  });
+  }
+);
 });

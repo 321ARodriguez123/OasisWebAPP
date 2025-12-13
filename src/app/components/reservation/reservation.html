@@ -42,25 +42,28 @@
                 </div>
             </div>
 
-            <button type="button" (click)="checkAvailability()" 
-                    class="w-full mt-8 bg-[#1f1f1f] border border-[#BB86FC] text-[#BB86FC] font-bold py-3 px-6 rounded-lg hover:bg-[#BB86FC] hover:text-[#1A0050] transition duration-300 uppercase tracking-wide">
-                🔍 Verificar Disponibilidad
+            <button type="button" (click)="checkAvailability()" [disabled]="isLoading"
+                    class="w-full mt-8 bg-[#1f1f1f] border border-[#BB86FC] text-[#BB86FC] font-bold py-3 px-6 rounded-lg hover:bg-[#BB86FC] hover:text-[#1A0050] transition duration-300 uppercase tracking-wide disabled:opacity-50 disabled:cursor-not-allowed">
+                <span *ngIf="!isLoading">🔍 Verificar Disponibilidad</span>
+                <span *ngIf="isLoading">⏳ Verificando...</span>
             </button>
-
-            <div *ngIf="message" class="mt-6 p-4 rounded-lg font-bold text-center border"
+            <div *ngIf="isLoading" class="mt-8 flex flex-col items-center justify-center fade-in">
+                <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#BB86FC]"></div>
+                <p class="text-[#BB86FC] mt-4 font-bold animate-pulse">Cargando disponibilidad...</p>
+            </div>
+            <div *ngIf="message && !isLoading" class="mt-6 p-4 rounded-lg font-bold text-center border"
                  [ngClass]="{
                     'bg-green-900 border-green-500 text-green-300': messageType === 'success',
                     'bg-red-900 border-red-500 text-red-300': messageType !== 'success'
                  }">
                 {{ message }}
             </div>
-        </div>
+            </div>
 
         <hr class="border-gray-800 my-8">
 
-        <div *ngIf="isAvailable" class="bg-[#121212] p-8 rounded-xl border border-[#333] shadow-lg">
-            
-            <h3 class="text-2xl font-bold text-white mb-6 flex items-center gap-2 border-b border-gray-800 pb-4">
+        <div *ngIf="isAvailable && !isLoading" class="bg-[#121212] p-8 rounded-xl border border-[#333] shadow-lg fade-in">
+        <h3 class="text-2xl font-bold text-white mb-6 flex items-center gap-2 border-b border-gray-800 pb-4">
                 <span>👤</span> Paso 2: Titular de la Reserva
             </h3>
             
@@ -112,10 +115,26 @@
 
             <div class="bg-[#0a0a0a] p-6 rounded-lg border border-dashed border-gray-700 text-center mb-8">
                 <h3 class="text-gray-400 text-lg mb-2">Habitación Asignada: <span class="text-white font-bold">{{ assignedRoom?.numero_habitacion }}</span></h3>
+                <p class="text-gray-500 mb-2">Noches de Estancia: <strong>{{ noches }}</strong></p>
                 <p class="text-gray-500 mb-2">Huéspedes: <strong>{{ searchData.numero_huespedes }}</strong></p>
                 <h2 class="text-4xl font-bold text-[#00C853] mt-4">Total: ${{ totalEstimated | number:'1.2-2' }}</h2>
             </div>
-
+            
+            <div *ngIf="reservationResult" class="fade-in mt-12 mb-8 p-8 rounded-xl border border-green-700 bg-green-900/50">
+                <h3 class="text-3xl font-bold text-green-400 mb-4 text-center">🎉 ¡Reserva Finalizada con Éxito!</h3>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-lg">
+                    <div class="p-3 bg-green-800/50 rounded-lg">
+                        <p class="text-green-300">ID de Confirmación:</p>
+                        <strong class="text-white text-xl">{{ reservationResult?.reserva_id }}</strong>
+                    </div>
+                    <div class="p-3 bg-green-800/50 rounded-lg">
+                        <p class="text-green-300">Costo Total:</p>
+                        <strong class="text-white text-2xl">${{ reservationResult?.total | number:'1.2-2' }}</strong>
+                    </div>
+                </div>
+            </div>
+            
             <button type="button" (click)="confirmReservation()"
                     class="w-full bg-[#BB86FC] text-[#1A0050] font-bold py-4 px-6 rounded-lg hover:bg-white hover:scale-[1.01] transition duration-300 shadow-lg shadow-purple-900/50">
                 ✅ CONFIRMAR Y PAGAR

@@ -1,0 +1,40 @@
+<div class="p-6 bg-gray-800 rounded-xl shadow-xl">
+    <h2 class="text-4xl font-extrabold text-yellow-400 mb-4">
+        Bienvenido, {{ adminName }}
+    </h2>
+
+    <p class="text-gray-400 mb-6">
+        Vista de resumen y control total del sistema.
+    </p>
+
+    <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+
+        <div
+            class="bg-gray-700 p-5 rounded-lg hover:bg-gray-600 transition cursor-pointer"
+            [routerLink]="['/admin/habitaciones']">
+            <h3 class="text-xl font-semibold text-white">
+                Administrar Habitaciones
+            </h3>
+            <p class="text-gray-400">Crear y asignar números</p>
+        </div>
+
+        <div
+            class="bg-gray-700 p-5 rounded-lg hover:bg-gray-600 transition cursor-pointer"
+            [routerLink]="['/admin/servicios']">
+            <h3 class="text-xl font-semibold text-white">
+                Administrar Servicios Adicionales
+            </h3>
+            <p class="text-gray-400"></p>
+        </div>
+
+        <div
+            class="bg-gray-700 p-5 rounded-lg hover:bg-gray-600 transition cursor-pointer"
+            [routerLink]="['/admin/tipos-habitacion']">
+            <h3 class="text-xl font-semibold text-white">
+                Administrar Tipos (Precios)
+            </h3>
+            <p class="text-gray-400">Estructura y costos</p>
+        </div>
+
+    </div>
+</div>

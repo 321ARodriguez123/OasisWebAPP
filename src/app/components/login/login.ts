@@ -35,7 +35,7 @@ export class Login {
         this.mensaje = 'Inicio de sesión exitoso. Redirigiendo...';
         this.exito = true; 
         setTimeout(() => {
-            this.router.navigate(['/reservar']);
+            this.router.navigate(['']);
         }, 3500);
       },
       error: () => {

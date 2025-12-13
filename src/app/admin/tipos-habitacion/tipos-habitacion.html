@@ -1,0 +1,61 @@
+<div class="p-6 bg-gray-800 rounded-xl shadow-xl text-white">
+    <h2 class="text-3xl font-extrabold text-yellow-400 mb-6">Gestión de Tipos de Habitación</h2>
+
+    <div *ngIf="mensaje" class="p-3 mb-4 bg-green-900 rounded-lg text-green-300">{{ mensaje }}</div>
+    <div *ngIf="error" class="p-3 mb-4 bg-red-900 rounded-lg text-red-300">{{ error }}</div>
+
+    <div class="bg-gray-700 p-6 rounded-lg mb-8">
+        <h3 class="text-xl font-semibold mb-4">Crear Nuevo Tipo</h3>
+        <form (ngSubmit)="crearTipo()" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <input [(ngModel)]="nuevoTipo.nombre_tipo" name="nombre" type="text" placeholder="Nombre (Ej: Suite)" required class="p-3 bg-gray-600 rounded border-gray-500">
+            <input [(ngModel)]="nuevoTipo.precio_base" name="precio" type="number" placeholder="Precio Base (Ej: 150.00)" required class="p-3 bg-gray-600 rounded border-gray-500">
+            <input [(ngModel)]="nuevoTipo.descripcion" name="descripcion" type="text" placeholder="Descripción breve" class="p-3 bg-gray-600 rounded border-gray-500">
+            <button type="submit" class="bg-yellow-600 text-white p-3 rounded-lg hover:bg-yellow-700 col-span-full md:col-span-1">Crear Tipo</button>
+        </form>
+    </div>
+
+    <h3 class="text-2xl font-semibold mb-4 border-b border-gray-700 pb-2">Tipos Existentes</h3>
+    <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-gray-700">
+            <thead class="bg-gray-700">
+                <tr>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">ID</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Nombre</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Precio Base</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Descripción</th>
+                    <th class="px-6 py-3">Acciones</th>
+                </tr>
+            </thead>
+            <tbody class="bg-gray-800 divide-y divide-gray-700">
+                <tr *ngFor="let tipo of tiposHabitacion">
+                    <ng-container *ngIf="editandoTipo && editandoTipo.tipo_habitacion_id === tipo.tipo_habitacion_id; else vistaNormal">
+                        <td class="px-6 py-4">
+                            <input [(ngModel)]="editandoTipo.nombre_tipo" type="text" class="p-2 bg-gray-600 rounded w-full">
+                        </td>
+                        <td class="px-6 py-4">
+                            <input [(ngModel)]="editandoTipo.precio_base" type="number" class="p-2 bg-gray-600 rounded w-full">
+                        </td>
+                        <td class="px-6 py-4">
+                            <input [(ngModel)]="editandoTipo.descripcion" type="text" class="p-2 bg-gray-600 rounded w-full">
+                        </td>
+                        <td class="px-6 py-4 text-sm font-medium">
+                            <button (click)="guardarEdicion()" class="text-green-500 hover:text-green-700 mr-3">Guardar</button>
+                            <button (click)="editandoTipo = null" class="text-gray-500 hover:text-gray-700">Cancelar</button>
+                        </td>
+                    </ng-container>
+                    
+                    <ng-template #vistaNormal>
+                        <td class="px-6 py-4 whitespace-nowrap">{{ tipo.tipo_habitacion_id }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">{{ tipo.nombre_tipo }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">${{ tipo.precio_base | number: '1.2-2' }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">{{ tipo.descripcion }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                            <button (click)="iniciarEdicion(tipo)" class="text-indigo-400 hover:text-indigo-600 mr-3">Editar</button>
+                            <button (click)="eliminarTipo(tipo.tipo_habitacion_id)" class="text-red-400 hover:text-red-600">Eliminar</button>
+                        </td>
+                    </ng-template>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

@@ -1,0 +1,42 @@
+<form (ngSubmit)="onSubmit()" class="profile-info-section">
+    
+    <div *ngIf="mensaje" 
+        class="message-alert"
+        [ngClass]="{
+            'alert-success': mensaje.startsWith('✅'),
+            'alert-error': mensaje.startsWith('❌'),
+            'alert-loading': mensaje.startsWith('⏳')
+        }">
+       <p>{{ mensaje }}</p>
+    </div>
+
+    <div class="info-item">
+        <span class="info-label">Nombres</span>
+        <input type="text" [(ngModel)]="nombreEdit" name="nombreEdit" required class="info-input">
+    </div>
+    <div class="info-item">
+        <span class="info-label">Apellidos</span>
+        <input type="text" [(ngModel)]="apellidoEdit" name="apellidoEdit" required class="info-input">
+    </div>
+    <div class="info-item">
+        <span class="info-label">Correo</span>
+        <input type="email" [(ngModel)]="correoEdit" name="correoEdit" required class="info-input">
+    </div>
+    <div class="info-item no-border">
+        <span class="info-label">Teléfono</span>
+        <input type="tel" [(ngModel)]="telefonoEdit" name="telefonoEdit" required class="info-input">
+    </div>
+    
+    <div class="action-buttons-group">
+        <button type="submit" [disabled]="guardandoPerfil" class="btn btn-primary-cta">
+            <span *ngIf="!guardandoPerfil">💾 Guardar Cambios</span>
+            <span *ngIf="guardandoPerfil" class="loading-content">
+                <div class="loading-spinner-small"></div>
+                Guardando...
+            </span>
+        </button>
+        <button type="button" (click)="onCancel()" [disabled]="guardandoPerfil" class="btn btn-secondary mt-2">
+            Cancelar
+        </button>
+    </div>
+</form>

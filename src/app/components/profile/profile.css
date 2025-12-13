@@ -1,0 +1,341 @@
+/* ———————— GENERAL LAYOUT ———————— */
+.profile-page-container {
+    min-height: 100vh;
+    background: #0a0a0a;
+    color: white;
+    padding: 40px 20px;
+}
+
+.profile-max-width {
+    max-width: 1200px;
+    margin: auto;
+}
+
+/* ———————— TITLES ———————— */
+.profile-main-title {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #BB86FC;
+    margin-bottom: 30px;
+    border-bottom: 1px solid #333;
+    padding-bottom: 15px;
+}
+
+/* ———————— LOADING ———————— */
+.loading-state {
+    text-align: center;
+    padding: 40px;
+}
+
+.spinner, .loading-spinner-small {
+    border: 4px solid #333;
+    border-top-color: #BB86FC;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+.spinner {
+    width: 50px;
+    height: 50px;
+    margin: auto;
+}
+
+.loading-spinner-small {
+    width: 20px;
+    height: 20px;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* ———————— MESSAGES ———————— */
+.message-alert {
+    padding: 15px;
+    border-radius: 10px;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 20px;
+    border: 1px solid;
+}
+
+.alert-success {
+    background: rgba(0, 150, 50, 0.2);
+    border-color: #00C853;
+    color: #00e676;
+}
+
+.alert-error {
+    background: rgba(150, 0, 0, 0.2);
+    border-color: #e53935;
+    color: #ef9a9a;
+}
+
+.alert-loading {
+    background: rgba(150, 150, 0, 0.2);
+    border-color: #fbc02d;
+}
+
+/* ———————— GRID STRUCTURE ———————— */
+.profile-grid {
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    gap: 30px;
+}
+
+@media (max-width: 800px) {
+    .profile-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ———————— SIDEBAR ———————— */
+.profile-card {
+    background: #121212;
+    padding: 25px;
+    border-radius: 16px;
+    border: 1px solid #333;
+    box-shadow: 0 0 10px rgba(187, 134, 252, 0.15);
+}
+
+.profile-header {
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+.profile-avatar {
+    width: 70px;
+    height: 70px;
+    background: #1f1f1f;
+    color: #BB86FC;
+    border: 2px solid #BB86FC;
+    font-size: 2rem;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    margin: auto;
+}
+
+.profile-name {
+    margin-top: 10px;
+    font-size: 1.4rem;
+    font-weight: bold;
+}
+
+.profile-role {
+    color: gray;
+    font-size: 0.9rem;
+}
+
+/* ———————— SIDEBAR INFO ———————— */
+.profile-info-section {
+    border-top: 1px solid #333;
+    padding-top: 20px;
+    margin-top: 20px;
+}
+
+.info-item {
+    padding: 15px 0;
+    border-bottom: 1px solid #333;
+}
+
+.info-item.no-border {
+    border-bottom: none;
+}
+
+.info-label {
+    color: #BB86FC;
+    font-size: 0.85rem;
+}
+
+.info-value {
+    display: block;
+    margin-top: 3px;
+    color: white;
+    font-size: 1rem;
+}
+
+/* ———————— BUTTONS ———————— */
+.btn {
+    padding: 12px 18px;
+    border-radius: 10px;
+    border: 1px solid;
+    cursor: pointer;
+    transition: 0.25s;
+    font-weight: bold;
+    text-align: center;
+    width: 100%;
+}
+
+.btn-logout {
+    background: #1f1f1f;
+    border-color: #e53935;
+    color: #ef9a9a;
+}
+
+.btn-logout:hover {
+    background: #e53935;
+    color: white;
+}
+
+/* ———————— RESERVATIONS ———————— */
+.reservations-title {
+    font-size: 2rem;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #333;
+    padding-bottom: 10px;
+    color: #BB86FC;
+}
+
+.no-reservations-card {
+    background: #121212;
+    padding: 25px;
+    border: 1px solid #333;
+    border-radius: 12px;
+    text-align: center;
+}
+
+.btn-primary-cta {
+    display: inline-block;
+    margin-top: 15px;
+    background: #1f1f1f;
+    border: 1px solid #BB86FC;
+    color: #BB86FC;
+    padding: 10px 18px;
+    border-radius: 10px;
+    font-weight: bold;
+}
+
+.btn-primary-cta:hover {
+    background: #BB86FC;
+    color: #1A0050;
+}
+
+/* ———————— RESERVATION ITEM ———————— */
+.reservation-item-card {
+    background: #121212;
+    padding: 20px;
+    border: 1px solid #333;
+    border-radius: 14px;
+    margin-bottom: 20px;
+    box-shadow: 0 0 8px rgba(187, 134, 252, 0.1);
+    transition: transform .2s;
+}
+
+.reservation-item-card:hover {
+    transform: scale(1.01);
+}
+
+.reservation-flex-content {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.reservation-room-title {
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+.reservation-details p {
+    color: #bbb;
+}
+
+.status-badge {
+    padding: 6px 10px;
+    border-radius: 6px;
+    font-weight: bold;
+}
+
+.status-confirmada {
+    background: rgba(0, 255, 0, 0.15);
+    color: #00E676;
+}
+
+.status-cancelada {
+    background: rgba(255, 0, 0, 0.15);
+    color: #EF5350;
+}
+
+.status-pendiente {
+    background: rgba(255, 255, 0, 0.15);
+    color: #FFEB3B;
+}
+
+.status-finalizada {
+    background: rgba(0, 150, 255, 0.15);
+    color: #42A5F5;
+}
+
+/* ———————— CANCEL BUTTON ———————— */
+.btn-cancel-reserva {
+    background: #1f1f1f;
+    color: #EF9A9A;
+    border: 1px solid #e53935;
+}
+
+.btn-cancel-reserva:hover:not(.btn-loading) {
+    background: #e53935;
+    color: white;
+}
+
+.btn-cancel-disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    background: #333;
+    border: 1px solid #444;
+}
+
+/* ———————— MODAL ———————— */
+.modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-dialog {
+    background: #121212;
+    padding: 25px;
+    border-radius: 14px;
+    border: 1px solid #333;
+    width: 90%;
+    max-width: 450px;
+    box-shadow: 0 0 15px rgba(187, 134, 252, 0.3);
+    animation: fadeIn 0.2s ease-out;
+}
+
+.modal-title {
+    color: #BB86FC;
+    margin-bottom: 10px;
+}
+
+.modal-message {
+    color: #ddd;
+    margin-bottom: 20px;
+}
+
+.btn-secondary {
+    background: #1f1f1f;
+    color: white;
+    border: 1px solid #555;
+}
+
+.btn-primary-danger {
+    background: #e53935;
+    border-color: #e53935;
+    color: white;
+}
+
+.btn-primary-danger:hover {
+    background: #ff5252;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: scale(.95); }
+    to   { opacity: 1; transform: scale(1); }
+}

@@ -1,0 +1,143 @@
+<div class="p-6 bg-gray-800 rounded-xl shadow-xl text-white">
+    <h2 class="text-3xl font-extrabold text-yellow-400 mb-6">Gestión de Habitaciones Físicas</h2>
+
+    <div *ngIf="mensaje" class="p-3 mb-4 bg-green-900 rounded-lg text-green-300">{{ mensaje }}</div>
+    <div *ngIf="error" class="p-3 mb-4 bg-red-900 rounded-lg text-red-300">{{ error }}</div>
+
+    <div class="bg-gray-700 p-6 rounded-lg mb-8">
+        <h3 class="text-xl font-semibold mb-4">Añadir Nueva Habitación</h3>
+        <form (ngSubmit)="crearHabitacion()" class="grid grid-cols-1 md:grid-cols-4 gap-4">
+            
+            <div class="relative">
+                <input [(ngModel)]="nuevaHabitacion.piso" name="piso" type="number" (ngModelChange)="calcularPrefijo()" placeholder="Piso (Ej: 1, 2, 3)" required class="p-3 bg-gray-600 rounded border-gray-500 w-full min-w-0" min="1" max="26">
+                <span *ngIf="prefijoPiso" class="absolute right-0 top-0 mt-3 mr-3 text-sm text-yellow-400 font-bold">
+                    Prefijo: {{ prefijoPiso }}
+                </span>
+            </div>
+
+            <input 
+                [(ngModel)]="nuevaHabitacion.numero_habitacion" 
+                name="numero" 
+                type="text" 
+                placeholder="Número Generado (Ej: A101)" 
+                required 
+                class="p-3 bg-gray-600 rounded border-gray-500"
+                readonly>
+            
+            <select [(ngModel)]="nuevaHabitacion.tipo_habitacion_id" name="tipo" required class="p-3 bg-gray-600 rounded border-gray-500">
+                <option [ngValue]="null" disabled>Seleccionar Tipo</option>
+                <option *ngFor="let tipo of tiposHabitacion" [ngValue]="tipo.tipo_habitacion_id">
+                    {{ tipo.nombre_tipo }} ({{ tipo.precio_base | number: '1.2-2' }}$)
+                </option>
+            </select>
+            
+            <select [(ngModel)]="nuevaHabitacion.condicion_habitacion" name="condicion" required class="p-3 bg-gray-600 rounded border-gray-500">
+                <option value="habilitado">Habilitado</option>
+                <option value="cerrado">Cerrado</option>
+                <option value="mantenimiento">Mantenimiento</option>
+            </select>
+
+            <div class="col-span-full bg-gray-600 p-4 rounded-lg">
+                <h4 class="text-lg font-semibold mb-2">Características Adicionales:</h4>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div *ngFor="let caracteristica of caracteristicas" class="flex items-center space-x-2">
+                        <input 
+                            type="checkbox" 
+                            [value]="caracteristica.caracteristica_id" 
+                            (change)="toggleCaracteristica($event, caracteristica.caracteristica_id)" 
+                            class="form-checkbox text-yellow-600 bg-gray-800 border-gray-500 rounded"
+                        >
+                        <label class="text-gray-300 text-sm">
+                            {{ caracteristica.descripcion }} ({{ caracteristica.precio_adicional | number: '1.2-2' }}$)
+                        </label>
+                    </div>
+                </div>
+            </div>
+            
+            <button type="submit" class="bg-yellow-600 text-white p-3 rounded-lg hover:bg-yellow-700 col-span-full md:col-span-1">Crear Habitación</button>
+        </form>
+    </div>
+
+    <h3 class="text-2xl font-semibold mb-4 border-b border-gray-700 pb-2">Inventario Actual</h3>
+    <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-gray-700">
+            <thead class="bg-gray-700">
+                <tr>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Número</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Tipo</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Piso</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Condición</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Características</th>
+                    <th class="px-6 py-3">Acciones</th>
+                </tr>
+            </thead>
+            <tbody class="bg-gray-800 divide-y divide-gray-700">
+                <tr *ngFor="let habitacion of habitaciones">
+                    
+                    <ng-container *ngIf="editandoHabitacion && editandoHabitacion.numero_habitacion === habitacion.numero_habitacion; else vistaNormal">
+                        <td class="px-6 py-4 whitespace-nowrap">{{ habitacion.numero_habitacion }}</td>
+                        <td class="px-6 py-4">
+                            <select [(ngModel)]="editandoHabitacion.tipo_habitacion_id" name="editTipo" class="p-2 bg-gray-600 rounded border-gray-500 w-full">
+                                <option *ngFor="let tipo of tiposHabitacion" [ngValue]="tipo.tipo_habitacion_id">
+                                    {{ tipo.nombre_tipo }}
+                                </option>
+                            </select>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">{{ habitacion.piso }}</td>
+                        <td class="px-6 py-4">
+                             <select [(ngModel)]="editandoHabitacion.condicion_habitacion" name="editCondicion" class="p-2 bg-gray-600 rounded border-gray-500 w-full">
+                                <option value="habilitado">Habilitado</option>
+                                <option value="cerrado">Cerrado</option>
+                                <option value="mantenimiento">Mantenimiento</option>
+                            </select>
+                        </td>
+                        <td class="px-6 py-4 text-sm text-gray-400">
+                            <div class="grid grid-cols-2 gap-1">
+                                <div *ngFor="let caracteristica of caracteristicas" class="flex items-center text-xs">
+                                    <input 
+                                        type="checkbox" 
+                                        [checked]="editandoHabitacion.caracteristicas_ids.includes(caracteristica.caracteristica_id)" 
+                                        (change)="toggleCaracteristicaEdicion($event, caracteristica.caracteristica_id)" 
+                                        class="form-checkbox text-yellow-600 bg-gray-800 border-gray-500 rounded mr-1"
+                                    >
+                                    <label>{{ caracteristica.descripcion }}</label>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                            <button (click)="guardarEdicion()" class="text-green-400 hover:text-green-600 mr-2">Guardar</button>
+                            <button (click)="cancelarEdicion()" class="text-gray-400 hover:text-gray-600">Cancelar</button>
+                        </td>
+                    </ng-container>
+                    
+                    <ng-template #vistaNormal>
+                        <td class="px-6 py-4 whitespace-nowrap">{{ habitacion.numero_habitacion }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">{{ habitacion.nombre_tipo }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">{{ habitacion.piso }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                             <span [ngClass]="{
+                                 'text-green-400': habitacion.condicion_habitacion === 'habilitado',
+                                 'text-yellow-400': habitacion.condicion_habitacion === 'mantenimiento',
+                                 'text-red-400': habitacion.condicion_habitacion === 'cerrado'
+                             }">
+                                 {{ habitacion.condicion_habitacion | titlecase }}
+                             </span>
+                        </td>
+                        <td class="px-6 py-4 text-sm text-gray-400">
+                            {{ habitacion.caracteristicas_nombres }}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                            <button 
+                                (click)="iniciarEdicion(habitacion)" 
+                                class="text-indigo-400 hover:text-indigo-600 mr-3"
+                            >
+                                Editar
+                            </button>
+                            <button (click)="eliminarHabitacion(habitacion.numero_habitacion)" class="text-red-400 hover:text-red-600">Eliminar</button>
+                        </td>
+                    </ng-template>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

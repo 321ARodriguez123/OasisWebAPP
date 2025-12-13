@@ -40,3 +40,4 @@ export interface UserReservation {
     total_pago: number;
     estado_pago?: string;
 }
+

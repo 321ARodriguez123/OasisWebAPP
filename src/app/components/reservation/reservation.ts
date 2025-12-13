@@ -10,7 +10,8 @@ export class Reservation {
 
 }*/
 
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core'; // ⬅️ CAMBIO 1: Importar ChangeDetectorRef
+//import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -43,23 +44,27 @@ export class Reservation implements OnInit {
   // Listas
   roomTypes: any[] = [];
   servicesList: any[] = [];
-
+  isLoading = false;
   // Estado
   isAvailable = false;
   assignedRoom: any = null;
   totalEstimated = 0;
   message = '';
   messageType = '';
-
-  constructor(private api: ApiService, private router: Router) {}
-
+noches: number = 0;
+reservationResult: any = null;
+  //constructor(private api: ApiService, private router: Router) {}
+  constructor(private api: ApiService, private router: Router, private cdr: ChangeDetectorRef) {}
   ngOnInit(): void {
     this.loadCatalogs();
   }
 
   loadCatalogs() {
     this.api.getRoomTypes().subscribe({
-      next: (res: any) => { if (res.success) this.roomTypes = res.tipos; },
+      next: (res: any) => { 
+        if (res.success) this.roomTypes = res.tipos; 
+        this.cdr.detectChanges();
+      },
       error: (e) => console.error(e)
     });
 
@@ -79,7 +84,7 @@ export class Reservation implements OnInit {
 
   checkAvailability() {
     this.message = '';
-    
+    console.log("consulta enviada");
     // Validación
     if (!this.searchData.tipo_habitacion_id || !this.searchData.fecha_entrada || !this.searchData.fecha_final) {
       this.showMessage('Por favor completa todos los campos.', 'error');
@@ -90,20 +95,33 @@ export class Reservation implements OnInit {
       this.showMessage('Debe haber al menos 1 huésped.', 'error');
       return;
     }
-
+    this.isLoading = true;    
+    this.isAvailable = false;
     this.api.checkAvailability(this.searchData).subscribe({
       next: (res: any) => {
-        if (res.success && res.available) {
+        
+        this.isLoading = false; 
+        setTimeout(() => {
+          if (res.success && res.available) {
           this.isAvailable = true;
           this.assignedRoom = res.resultado;
           this.recalculateTotal();
+          this.noches = res.resultado.noches;
+          console.log("Perfil recibido:", res);
           this.showMessage(`¡Disponible! Habitación asignada: ${this.assignedRoom.numero_habitacion}`, 'success');
+          this.cdr.detectChanges(); // ⬅️ CAMBIO 2: Forzar detección de cambios
         } else {
           this.isAvailable = false;
           this.showMessage(res.message || 'No hay habitaciones disponibles.', 'error');
         }
+        },500);
+
       },
-      error: (err) => this.showMessage('Error de conexión.', 'error')
+      error: (err) =>{ 
+        this.isLoading = false;
+        this.showMessage('Error de conexión.', 'error')
+        
+      }
     });
   }
 
@@ -144,13 +162,18 @@ export class Reservation implements OnInit {
     this.api.createReservation(payload).subscribe({
       next: (res: any) => {
         if (res.success) {
-          alert(`✅ ¡Reserva Exitosa!\nID: ${res.datos.reserva_id}\nTotal: $${res.datos.total}`);
-          this.router.navigate(['/']);
+          console.log("reserva creada: ", res);
+          // 🛑 CAMBIO: Almacenar resultado y mostrar mensaje de éxito 
+          this.reservationResult = res.datos; // Almacena ID y Total
+          this.showMessage('✅ ¡Reserva Exitosa! Revisa el resumen final abajo.', 'success');
         }
       },
       error: (err) => {
         console.error(err);
         this.showMessage(err.error.error || 'Error al crear la reserva.', 'error');
+        setTimeout(() => {
+              this.router.navigate(['']); // Redirige al inicio
+          }, 4000);
       }
     });
   }

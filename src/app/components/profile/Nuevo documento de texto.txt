@@ -1,2 +1,154 @@
 injectar el servicio en el controlador
 le decimos de que tipo va a ser
+<div class="profile-page-container">
+    <div class="profile-max-width">
+        
+        <h2 class="profile-main-title">
+            Mi Cuenta
+        </h2>
+
+        <div *ngIf="cargando" class="loading-state">
+            <div class="spinner"></div>
+            <p class="loading-text">Cargando perfil...</p>
+        </div>
+        
+        <div *ngIf="!cargando && mensaje" 
+             class="message-alert"
+             [ngClass]="{
+                 'alert-success': mensaje.startsWith('✅'),
+                 'alert-error': mensaje.startsWith('❌'),
+                 'alert-loading': mensaje.startsWith('⏳')
+             }">
+            <p>{{ mensaje }}</p>
+        </div>
+
+
+        <div *ngIf="!cargando && perfil" class="profile-grid">
+            
+            <div class="profile-sidebar">
+                <div class="profile-card sidebar-sticky">
+                    <div class="profile-header">
+                        <div class="profile-avatar">
+                            {{ perfil.nombres.charAt(0) }}
+                        </div>
+                        <h3 class="profile-name">{{ perfil.nombres }} {{ perfil.apellidos }}</h3>
+                        <p class="profile-role">Cliente Registrado</p>
+                    </div>
+
+                    <div class="profile-info-section">
+                        <div class="info-item">
+                            <span class="info-label">CI / DNI</span>
+                            <span class="info-value font-mono">{{ perfil.identificacion_ci }}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Correo</span>
+                            <span class="info-value break-words">{{ perfil.correo }}</span>
+                        </div>
+                        <div class="info-item no-border">
+                            <span class="info-label">Teléfono</span>
+                            <span class="info-value">{{ perfil.telefono }}</span>
+                        </div>
+                    </div>
+
+                    <button (click)="cerrarSesion()" class="btn btn-logout">
+                        Cerrar Sesión
+                    </button>
+                </div>
+            </div>
+
+            <div class="reservations-main-content">
+                <h3 class="reservations-title">
+                    <span>📅</span> Mis Reservas
+                </h3>
+
+                <div *ngIf="reservas.length === 0" class="no-reservations-card">
+                    <p>No tienes reservas activas actualmente.</p>
+                    <a routerLink="/reservar" class="btn btn-primary-cta">
+                        ¡Haz tu primera reserva!
+                    </a>
+                </div>
+
+                <div class="reservations-list-wrapper">
+                    <div *ngFor="let r of reservas" class="reservation-item-card">
+                        <div class="reservation-flex-content">
+                            
+                            <div class="reservation-details-wrapper">
+                                <h4 class="reservation-room-title">
+                                    Habitación {{ r.numero_habitacion }}
+                                    <span class="reservation-id-badge">ID: {{ r.reserva_id }}</span>
+                                </h4>
+                                <div class="reservation-details">
+                                    <p>📥 <span class="detail-label">Entrada:</span> {{ r.fecha_entrada | date:'dd/MM/yyyy' }}</p>
+                                    <p>📤 <span class="detail-label">Salida:</span> {{ r.fecha_salida | date:'dd/MM/yyyy' }}</p>
+                                    <p>👥 {{ r.numero_huespedes }} Huésped(es)</p>
+                                </div>
+                            </div>
+
+                            <div class="reservation-status-actions">
+                                <div class="status-badge-wrapper">
+                                    <span class="status-badge"
+                                          [ngClass]="{
+                                              'status-confirmada': r.estado === 'Confirmada',
+                                              'status-cancelada': r.estado === 'Cancelada',
+                                              'status-pendiente': r.estado === 'Pendiente',
+                                              'status-finalizada': r.estado === 'Finalizada'
+                                          }">
+                                        {{ r.estado }}
+                                    </span>
+                                </div>
+                                <div class="total-info">
+                                    <p class="total-label">Total</p>
+                                    <p class="total-value">${{ r.total_pago }}</p>
+                                </div>
+                                
+                                <button *ngIf="r.estado === 'Confirmada' || r.estado === 'Pendiente'" 
+                                        (click)="abrirModalConfirm(r.reserva_id)" 
+                                        [disabled]="cancelando"
+                                        class="btn btn-cancel-reserva"
+                                        [class.btn-loading]="cancelando && reservaIdABorrar == r.reserva_id">
+                                    <span *ngIf="!cancelando">🗑️ Borrar Reserva</span>
+                                    <span *ngIf="cancelando && reservaIdABorrar == r.reserva_id" class="loading-content">
+                                        <div class="loading-spinner-small"></div>
+                                        Eliminando...
+                                    </span>
+                                    <span *ngIf="cancelando && reservaIdABorrar != r.reserva_id">Eliminar</span>
+                                </button>
+                                <button *ngIf="r.estado !== 'Confirmada' && r.estado !== 'Pendiente'" 
+                                        disabled
+                                        class="btn btn-cancel-disabled">
+                                    Acción No Disponible
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div *ngIf="mostrarModalConfirm" class="modal-backdrop">
+        <div class="modal-dialog">
+            <h3 class="modal-title">⚠️ Confirmar Cancelación</h3>
+            <p class="modal-message">
+                ¿Estás seguro de que deseas cancelar la reserva **#{{ reservaIdABorrar }}**? Esta acción la marcará como "Cancelada".
+            </p>
+            
+            <div class="modal-actions">
+                <button (click)="cerrarModalConfirm()" 
+                        class="btn btn-secondary"
+                        [disabled]="cancelando">
+                    Volver
+                </button>
+                <button (click)="confirmarBorrar()" 
+                        class="btn btn-primary-danger"
+                        [disabled]="cancelando">
+                    <span *ngIf="!cancelando">Cancelar Reserva</span>
+                    <span *ngIf="cancelando" class="loading-content">
+                        <div class="loading-spinner-small"></div>
+                        Procesando...
+                    </span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
