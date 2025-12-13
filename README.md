@@ -1,59 +1,56 @@
-# HotelOasisFrontend
+![Uploading image.png…]()
+Descripción Breve
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.0.0.
+"OASIS" es un Sistema de Gestión Hotelera integral diseñado para automatizar y optimizar todos los procesos operativos y administrativos de un hotel.
 
-## Development server
 
-To start a local development server, run:
+OASIS" es un Sistema de Gestión Hotelera diseñado para ofrecer una experiencia fluida y optimizada a los clientes. Su objetivo principal, desde la perspectiva del usuario, es automatizar y optimizar la gestión de reservas y servicios adicionales
 
-```bash
-ng serve
-```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
 
-## Code scaffolding
+Inventario y Servicios: Permite al personal administrativo gestionar el inventario de habitaciones y administrar los servicios adicionales ofrecidos al cliente.
+Componentes Desarrollados por el Equipo - Proyecto OASIS
+Este proyecto de Gestión Hotelera "OASIS" busca automatizar y optimizar los procesos operativos y administrativos de un hotel. A continuación, se detallan las contribuciones específicas de cada integrante en los módulos clave de acceso y gestión de usuarios.
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+👥 Integrantes del Equipo
 
-```bash
-ng generate component component-name
-```
+Jhostin Contreras Poma 
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
 
-```bash
-ng generate --help
-```
+Diego Adrian Rodriguez Quispe 
 
-## Building
 
-To build the project run:
+Alejandro Antoni Paucara Quispe 
 
-```bash
-ng build
-```
+Módulos y Contribuciones Individuales
+ 1. Jhostin Contreras Poma: Módulo de Acceso (Inicio de Sesión y Registro)
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+Descripción del Componente: Responsable de la implementación principal del flujo de Registro e Inicio de Sesión del Usuario.
 
-## Running unit tests
+Aportes Clave:
 
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
+Desarrollo de la lógica inicial para la autenticación y el flujo de navegación del cliente al ingresar al sistema.
 
-```bash
-ng test
-```
+Creación de las redirecciones necesarias hacia las páginas de registro e inicio de sesión.
 
-## Running end-to-end tests
+Base funcional del requerimiento R1 (Registrar información o datos de un usuario).
 
-For end-to-end (e2e) testing, run:
+ 2. Diego Adrian Rodriguez Quispe: Mejora y Validación del Registro
+Descripción del Componente: Se enfocó en optimizar y asegurar la integridad de los datos de los nuevos usuarios en el proceso de registro.
 
-```bash
-ng e2e
-```
+Aportes Clave:
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+Implementación de las validaciones de datos para asegurar que la información ingresada cumpla con los requisitos (Entrada: Nombres, Correo, CI, Teléfono, etc.).
 
-## Additional Resources
+Desarrollo del Manejo de Situaciones Anormales en el registro , como la detección y prevención de duplicados de registro mediante la verificación de CI o correo electrónico.
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+Aseguramiento de los Criterios de Aceptación para que los datos se almacenen correctamente.
+
+ 3. Alejandro Antoni Paucara Quispe: Componente "Mi Cuenta"
+Descripción del Componente: Creación del módulo central para la gestión de la cuenta del cliente una vez que ha iniciado sesión.
+
+Aportes Clave:
+
+Diseño e implementación de la interfaz donde el cliente puede visualizar y modificar sus datos personales registrados previamente .
+
+Funcionalidad para que el cliente pueda acceder al historial o detalles de sus reservas y pagos asociados 
